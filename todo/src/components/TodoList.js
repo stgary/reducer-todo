@@ -1,19 +1,24 @@
-import React from 'react';
-import Todo from './Todo';
+import React from "react";
 
-const TodoList = props => {
-    return (
-        <div>
-            {props.todo.map((item, index) => (
-            <Todo 
-                key={index}
-                item={item}
+import Todo from "./Todo";
 
+export default function TodoList(props) {
+  const { todos, deleteTodo, toggleCompleted } = props;
+  console.log(todos);
+  return (
+    <div>
+      {todos.map(todo => {
+        return (
+          <div>
+            <Todo
+              key={todo.id}
+              todo={todo}
+              deleteTodo={deleteTodo}
+              toggleCompleted={toggleCompleted}
             />
-            ))}
-            <button onClick={props.deleteItem}>Delete</button>
-        </div>
-    );
-};
-
-export default TodoList;
+          </div>
+        );
+      })}
+    </div>
+  );
+}

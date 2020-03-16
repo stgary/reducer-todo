@@ -1,57 +1,65 @@
-import React, { useState, useReducer } from 'react';
-import './App.css';
-import TodoForm from './components/TodoForm';
-import TodoList from './components/TodoList';
-import { TodoReducer, initialState } from './components/reducers/TodoReducer';
+import React, { useState, useReducer } from "react";
+import "./App.css";
+
+// Contexts
+import { TodoContext } from "./contexts/TodoContext";
+
+// Components
+import TodoForm from "./components/TodoForm";
+import TodoList from "./components/TodoList";
+
+// Reducers
+import { todoReducer, initialState } from "./components/reducers/todoReducer";
 
 function App() {
+  const [inputText, setInputText] = useState("");
+  const [state, dispatch] = useReducer(todoReducer, initialState);
 
-  const [state, dispatch] = useReducer(TodoReducer, initialState);
+  // Handlers
 
-  console.log(state);
+  const changeHandler = e => {
+    setInputText(e.target.value);
+  };
 
-  // const toggleItem = clickedItemId => {
-  //   console.log(clickedItemId);
-  //   setTodo(todo.map(item => {
-  //       if(item.id === clickedItemId) {
-  //         return {
-  //         ...item,
-  //         completed: !item.completed
-  //         };
-  //       } else {
-  //         return  item;
-  //       }
-  //     })
-  //   );
-  // };
+  const submitHandler = e => {
+    e.preventDefault();
 
-  const deleteItem = () => {
-    state.map(item => {
-      if(item.completed === true) {
-      state.splice(item, 1);
-      console.log(state);
-      // setTodo([...item]);
+    dispatch({
+      type: "SUBMIT_TODO",
+      payload: {
+        id: Date.now(),
+        task: inputText,
+        completed: false
       }
-    })
-  }
-   
-  const addItem = itemName => {
-    const newItem = {
-      task: itemName,
-      id: new Date(),
-      completed: false
-    };
-    // setTodo([...state, newItem]);
+    });
+    setInputText("");
+  };
+
+  // Action Creators
+  const deleteTodo = id => {
+    dispatch({ type: "DELETE_TODO", payload: id });
+  };
+
+  const toggleCompleted = id => {
+    dispatch({ type: "TOGGLE_COMPLETED", payload: id });
+  };
+
+  const clearCompleted = () => {
+    dispatch({ type: "CLEAR_COMPLETED" });
   };
 
   return (
-    <div>
-      <h1>Todo List</h1>
-      <TodoForm addItem = {addItem} />
-      <TodoList 
-      todo={state}
-      // toggleItem={toggleItem}
-      deleteItem={deleteItem}
+    <div className="App">
+      <TodoForm
+        submitHandler={submitHandler}
+        changeHandler={changeHandler}
+        inputText={inputText}
+        clearCompleted={clearCompleted}
+      />
+      <TodoList
+        todos={state.todos}
+        deleteTodo={deleteTodo}
+        toggleCompleted={toggleCompleted}
       />
     </div>
   );

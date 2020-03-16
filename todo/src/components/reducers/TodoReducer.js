@@ -1,25 +1,37 @@
-export const initialState = [
-    {
-      task: 'Organize Garage',
-      id: 1528817077286,
-      completed: false
-    },
-    {
-      task: 'Bake Cookies',
-      id: 1528817084358,
-      completed: false
-    }
-  ];
+export const initialState = {
+    todos: []
+  };
   
-  export const TodoReducer = (state, action) => {
-    console.log(action);
+  export function todoReducer(state, action) {
     switch (action.type) {
-      case 'TOGGLE_ITEM':
+      case "SUBMIT_TODO":
+        return { ...state, todos: [...state.todos, { todo: action.payload }] };
+      case "DELETE_TODO":
         return {
           ...state,
-          completed: true
+          todos: state.todos.filter(todo => {
+            return todo.todo.id !== action.payload;
+          })
         };
-      default:
-        return state;
+      case "TOGGLE_COMPLETED":
+        const matchedId = state.todos.find(todo => {
+          return todo.todo.id === action.payload;
+        });
+  
+        return {
+          ...state,
+          todos: state.todos.map(({ todo }) => {
+            return matchedId.todo.id === todo.id
+              ? { todo: { ...todo, completed: !todo.completed } }
+              : { todo };
+          })
+        };
+      case "CLEAR_COMPLETED":
+        return {
+          ...state,
+          todos: state.todos.filter(({ todo }) => !todo.completed)
+        };
+        default:
+            return state;
     }
-}
+  }

@@ -1,16 +1,33 @@
-import React, { useReducer } from 'react';
-import { TodoReducer, initialState } from './reducers/TodoReducer';
+import React from "react";
 
-const Todo = props => {
+export default function Todo(props) {
+  const { deleteTodo, toggleCompleted } = props;
+  // destructuring object properties
+  let {
+    todo: {
+      todo: { task, id, completed }
+    }
+  } = props;
 
-    const [state, dispatch] = useReducer(TodoReducer, initialState);
-
-    return (
-        <div
-            onClick={() => dispatch({ type: 'TOGGLE_ITEM' })}>
-            <p>{props.item.task}</p>
-        </div>
-    );
-};
-
-export default Todo;
+  return (
+    <div className={`Todo ${completed ? "completed" : ""}`}>
+      <p
+        onClick={() => {
+          toggleCompleted(id);
+        }}
+      >
+        {task}
+      </p>
+      <div>
+        <button
+          className="delete-todo-btn"
+          onClick={() => {
+            deleteTodo(id);
+          }}
+        >
+          Delete
+        </button>
+      </div>
+    </div>
+  );
+}
