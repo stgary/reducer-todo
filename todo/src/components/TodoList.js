@@ -8,7 +8,6 @@ const TodoList = props => {
             <Todo 
                 key={index}
                 item={item}
-                toggleItem={props.toggleItem}
 
             />
             ))}

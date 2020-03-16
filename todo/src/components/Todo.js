@@ -1,9 +1,13 @@
-import React from 'react';
+import React, { useReducer } from 'react';
+import { TodoReducer, initialState } from './reducers/TodoReducer';
 
 const Todo = props => {
+
+    const [state, dispatch] = useReducer(TodoReducer, initialState);
+
     return (
         <div
-            onClick={ () => props.toggleItem(props.item.id)}>
+            onClick={() => dispatch({ type: 'TOGGLE_ITEM' })}>
             <p>{props.item.task}</p>
         </div>
     );
